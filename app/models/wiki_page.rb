@@ -1,4 +1,6 @@
 class WikiPage < ActiveRecord::Base
+  audited
+  
   # --- 模型关联
   belongs_to :creator, :class_name => 'User', :foreign_key => :creator_id
   has_associated_audits
@@ -7,7 +9,6 @@ class WikiPage < ActiveRecord::Base
   module UserMethods
     def self.included(base)
       base.has_many :wiki_pages, :foreign_key => :creator_id
-      base.audited :associated_with => :wiki_page
 
       base.send(:include, InstanceMethods)
     end

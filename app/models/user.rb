@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  audited
-  
   include UserAuthMethods
   
   # 校验部分
