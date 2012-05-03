@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120503062549) do
+ActiveRecord::Schema.define(:version => 20120503063933) do
 
   create_table "activities", :force => true do |t|
     t.string   "title"
@@ -378,6 +378,15 @@ ActiveRecord::Schema.define(:version => 20120503062549) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "kind",         :default => "TEXT"
+  end
+
+  create_table "wiki_pages", :force => true do |t|
+    t.integer  "creator_id"
+    t.string   "title"
+    t.text     "content"
+    t.integer  "latest_version"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

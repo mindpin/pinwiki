@@ -1,6 +1,7 @@
 Quora::Application.routes.draw do
   
   resources :notifications
+  resources :wiki
 
   # -- 用户登录认证相关 --
   root :to=>"index#index"

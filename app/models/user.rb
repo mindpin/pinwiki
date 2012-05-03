@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  audited
+  
   include UserAuthMethods
   
   # 校验部分
@@ -39,5 +41,5 @@ class User < ActiveRecord::Base
   
   # ----------- 以下是方法扩充
   include OnlineRecord::UserMethods
-
+  include WikiPage::UserMethods
 end
