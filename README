@@ -1,7 +1,7 @@
-Notification application
+wiki application
 
 Environment
-Ubuntu 11.10
+Ubuntu 12.04
 Rails 3.1.1
 ruby 1.9.3p6 (2011-12-20 revision 34080) [i686-linux] (This will have Chinese problem and need magic_encoding which can solve it)
 or 
