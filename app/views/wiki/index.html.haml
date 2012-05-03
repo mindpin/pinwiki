@@ -6,3 +6,4 @@
   %p
     = link_to wiki_page.title, wiki_path(wiki_page)
     = link_to '编辑', edit_wiki_path(wiki_page)
+    = link_to '删除', wiki_path(wiki_page), :method => :delete

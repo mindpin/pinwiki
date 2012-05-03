@@ -30,4 +30,10 @@ class WikiController < ApplicationController
     redirect_to '/wiki'
   end
   
+  def destroy
+    @wiki_page = WikiPage.find(params[:id])
+    @wiki_page.destroy
+    redirect_to '/wiki'
+  end
+  
 end
