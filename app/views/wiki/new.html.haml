@@ -2,7 +2,8 @@
   = link_to '创建新页面', '/wiki/new'
   = link_to 'Wiki列表', '/wiki'
   
-
+%p
+  = @result
 .new-page
 
   = flash.now[:error]

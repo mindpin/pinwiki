@@ -13,7 +13,7 @@ class WikiController < ApplicationController
     @wiki_page = current_user.wiki_pages.build(params[:wiki_page])
     @wiki_page.save
     
-    redirect_to '/wiki/index'
+    redirect_to '/wiki'
   end
   
   def show
@@ -33,6 +33,7 @@ class WikiController < ApplicationController
   def destroy
     @wiki_page = WikiPage.find(params[:id])
     @wiki_page.destroy
+    
     redirect_to '/wiki'
   end
   
