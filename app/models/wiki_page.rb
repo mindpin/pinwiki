@@ -13,7 +13,7 @@ class WikiPage < ActiveRecord::Base
     end
     
     module InstanceMethods
-
+      #Todo
     end
   end
 end

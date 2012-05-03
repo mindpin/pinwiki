@@ -1,3 +1,10 @@
 .p
   = link_to '创建新页面', '/wiki/new'
   = link_to 'Wiki列表', '/wiki'
+  
+%p
+  = @wiki_page.title
+  
+
+%p
+  = @wiki_page.content

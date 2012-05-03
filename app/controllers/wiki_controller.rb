@@ -1,6 +1,6 @@
 class WikiController < ApplicationController
   def index
-
+    @wiki_pages = WikiPage.all
   end
   
   def new
@@ -13,7 +13,7 @@ class WikiController < ApplicationController
   end
   
   def show
-    
+    @wiki_page = WikiPage.find(params[:id])
   end
   
 end
