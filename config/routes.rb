@@ -1,6 +1,14 @@
 Quora::Application.routes.draw do
   
-  resources :notifications
+  resources :wiki do
+    collection do
+      get :versions
+    end
+    
+    member do
+    end
+  end
+  
   resources :wiki
 
   # -- 用户登录认证相关 --

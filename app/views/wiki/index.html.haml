@@ -1,6 +1,5 @@
 .p
-  = link_to '创建新页面', '/wiki/new'
-  = link_to 'Wiki列表', '/wiki'
+  = render 'wiki/parts/nav'
 
 - @wiki_pages.each do |wiki_page|
   %p

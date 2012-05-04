@@ -37,4 +37,9 @@ class WikiController < ApplicationController
     redirect_to '/wiki'
   end
   
+  # 改动的版本列表
+  def versions
+    @versions = Audit.all
+  end
+  
 end

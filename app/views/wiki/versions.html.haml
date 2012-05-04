@@ -1,0 +1,15 @@
+.p
+  = link_to '创建新页面', '/wiki/new'
+  = link_to 'Wiki列表', '/wiki'
+  = link_to '版本列表', '/wiki/versions'
+
+- @versions.each do |version|
+  %p
+    - if version.action.eql?('destroy')
+      = 'test'
+    - else
+      = version.wiki_page.title
+      
+    = version.action
+    
+    = version.creator
