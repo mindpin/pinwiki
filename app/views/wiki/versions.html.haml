@@ -5,11 +5,15 @@
 
 - @versions.each do |version|
   %p
+    = version.audited_changes
+    
     - if version.action.eql?('destroy')
       = 'test'
     - else
       = version.wiki_page.title
-      
+ 
     = version.action
     
-    = version.creator
+    = version.creator.name
+    
+    = version.created_at
