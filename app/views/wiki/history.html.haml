@@ -3,7 +3,7 @@
 
 - @history.each do |version|
   %p
-    = version.version
+    = version.id
     
     = version.creator.name
     
@@ -14,4 +14,4 @@
     = version.created_at
     
   %p
-    = link_to '回滚到该版本', "/wiki/#{version.version}/rollback", :confirm => '是否确定回滚所有历史记录'
+    = link_to '回滚到该版本', "/wiki/#{version.id}/rollback", :confirm => '是否确定回滚所有历史记录'

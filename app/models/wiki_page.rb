@@ -5,6 +5,18 @@ class WikiPage < ActiveRecord::Base
   belongs_to :creator, :class_name => 'User', :foreign_key => :creator_id
   audited :associated_with => :creator
   
+  after_create :create_new_version
+  after_save :create_new_version
+  
+  def create_new_version
+    WikiPageVersion.create(
+      :wiki_page_id => self.id,
+      :version => self.audits.count,
+      :title => self.title, 
+      :content => self.content
+    )
+  end
+  
   
   # --- 给其他类扩展的方法
   module UserMethods

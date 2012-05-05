@@ -8,6 +8,7 @@ Quora::Application.routes.draw do
     member do
       get :versions
       get :page_rollback
+      get :rollback
     end
   end
   
