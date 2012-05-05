@@ -6,7 +6,7 @@
   
 - @versions.each do |version|
   %p
-    = version.version
+    = version.id
     
     = version.user.name
     
@@ -16,5 +16,3 @@
 
     = version.created_at
     
-  %p
-    = link_to '回滚到该版本', "/wiki/#{version.version}/page_rollback", :confirm => '是否确定回滚到该版本'

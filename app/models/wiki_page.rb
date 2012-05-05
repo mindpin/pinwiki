@@ -5,13 +5,13 @@ class WikiPage < ActiveRecord::Base
   belongs_to :creator, :class_name => 'User', :foreign_key => :creator_id
   audited :associated_with => :creator
   
-  after_create :create_new_version
-  # after_save :create_new_version
+  after_save :create_new_version
+  before_destroy :create_new_version
   
   def create_new_version
     WikiPageVersion.create(
       :wiki_page_id => self.id,
-      :audit_id => Audit.count,
+      :audit_id => Audit.last.id,
       :title => self.title, 
       :content => self.content
     )

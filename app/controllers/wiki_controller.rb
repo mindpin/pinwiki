@@ -1,6 +1,5 @@
 class WikiController < ApplicationController
 
-  
   def index
     @wiki_pages = WikiPage.all
   end
@@ -33,19 +32,8 @@ class WikiController < ApplicationController
   
   def destroy
     @wiki_page = WikiPage.find(params[:id])
-    
-    # 同时为该条目创建一个新的版本
-    wiki_page_version = WikiPageVersion.create(
-      :wiki_page_id => @wiki_page.id,
-      :title => @wiki_page.title, 
-      :content => @wiki_page.content
-    )
-    
     @wiki_page.destroy
-    
-    # 更新 wiki page version　版本
-    wiki_page_version.update_attributes(:audit_id => Audit.count)
-    
+
     redirect_to '/wiki'
   end
   
@@ -62,6 +50,7 @@ class WikiController < ApplicationController
   
   # 单条记录的版本回滚
   def page_rollback
+=begin
     audit = Audit.find_by_version(params[:id])
     wiki_page = WikiPage.find(audit.auditable_id)
     
@@ -78,6 +67,7 @@ class WikiController < ApplicationController
     #p 'ffffffffffffffffffffffffffffffff'
     
     redirect_to "/wiki/#{audit.auditable_id}"
+=end
   end
   
   
@@ -93,22 +83,23 @@ class WikiController < ApplicationController
 
       when 'update'
         # page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
-=begin
+
         wiki_page = WikiPage.find(audit.auditable_id)
-        unless wiki_page.nil?
-          wiki_page.title = audit.wiki_page_version.title
-          wiki_page.content = audit.wiki_page_version.content
-          wiki_page.creator_id = audit.wiki_page_version.creator_id
-          wiki_page.save
-        end
-=end       
-        
+
+        wiki_page.title = audit.wiki_page_version.prev.title
+        wiki_page.content = audit.wiki_page_version.prev.content
+        wiki_page.creator_id = audit.wiki_page_version.prev.creator_id
+        wiki_page.save
+     
       when 'destroy'
-        WikiPage.create(
-          :title => audit.wiki_page_version.title,
-          :content => audit.wiki_page_version.content,
-          :creator_id => audit.wiki_page_version.creator_id
-        )
+        wiki_page = WikiPage.new
+
+        wiki_page.id = audit.wiki_page_version.wiki_page_id
+        wiki_page.title = audit.wiki_page_version.title
+        wiki_page.content = audit.wiki_page_version.content
+        wiki_page.creator_id = audit.wiki_page_version.creator_id
+        
+        wiki_page.save
 
       end
     end
