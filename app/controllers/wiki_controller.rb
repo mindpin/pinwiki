@@ -37,9 +37,14 @@ class WikiController < ApplicationController
     redirect_to '/wiki'
   end
   
+  def history
+    @history = Audit.all
+  end
+  
   # 改动的版本列表
   def versions
-    @versions = Audit.all
+    @wiki_page = WikiPage.find(params[:id])
+    @versions = @wiki_page.audits
   end
   
 end

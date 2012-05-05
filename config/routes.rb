@@ -2,10 +2,11 @@ Quora::Application.routes.draw do
   
   resources :wiki do
     collection do
-      get :versions
+      get :history
     end
     
     member do
+      get :versions
     end
   end
   

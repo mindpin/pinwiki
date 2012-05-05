@@ -1,12 +1,9 @@
 .p
   = render 'wiki/parts/nav'
 
-%p
-  = @wiki_page.title
-  
-- @versions.each do |version|
+- @history.each do |version|
   %p
-    = version.user.name
+    = version.creator.name
     
     = version.action
     
