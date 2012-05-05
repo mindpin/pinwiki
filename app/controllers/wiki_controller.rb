@@ -37,6 +37,7 @@ class WikiController < ApplicationController
     redirect_to '/wiki'
   end
   
+  # 所有的版本历史记录列表
   def history
     @history = Audit.all
   end
@@ -45,6 +46,23 @@ class WikiController < ApplicationController
   def versions
     @wiki_page = WikiPage.find(params[:id])
     @versions = @wiki_page.audits
+  end
+  
+  # 单条记录的版本回滚
+  def page_rollback
+    audit = Audit.find_by_version(params[:id])
+    
+    case audit.action
+    when 'create'
+      page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
+    when 'update'
+    when 'destroy'
+    end
+    #p audit.audited_changes
+    #p page
+    #p 'ffffffffffffffffffffffffffffffff'
+    
+    redirect_to "/wiki/#{audit.auditable_id}"
   end
   
 end
