@@ -6,12 +6,12 @@ class WikiPage < ActiveRecord::Base
   audited :associated_with => :creator
   
   after_create :create_new_version
-  after_save :create_new_version
+  # after_save :create_new_version
   
   def create_new_version
     WikiPageVersion.create(
       :wiki_page_id => self.id,
-      :version => self.audits.count,
+      :audit_id => Audit.count,
       :title => self.title, 
       :content => self.content
     )

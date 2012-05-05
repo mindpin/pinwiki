@@ -44,7 +44,7 @@ class WikiController < ApplicationController
     @wiki_page.destroy
     
     # 更新 wiki page version　版本
-    wiki_page_version.update_attributes(:version => @wiki_page.audits.count)
+    wiki_page_version.update_attributes(:audit_id => Audit.count)
     
     redirect_to '/wiki'
   end
@@ -93,6 +93,7 @@ class WikiController < ApplicationController
 
       when 'update'
         # page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
+=begin
         wiki_page = WikiPage.find(audit.auditable_id)
         unless wiki_page.nil?
           wiki_page.title = audit.wiki_page_version.title
@@ -100,7 +101,7 @@ class WikiController < ApplicationController
           wiki_page.creator_id = audit.wiki_page_version.creator_id
           wiki_page.save
         end
-        
+=end       
         
       when 'destroy'
         WikiPage.create(
