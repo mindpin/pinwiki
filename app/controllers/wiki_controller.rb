@@ -55,7 +55,7 @@ class WikiController < ApplicationController
     
     audits.each do |audit|
       # wiki_page.rollback(audit)
-      _rollback_audit(audit)
+     _rollback_audit(audit)
     end
     
     redirect_to "/wiki"
