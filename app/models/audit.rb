@@ -8,11 +8,7 @@ class Audit < ActiveRecord::Base
   def self.find_rollback_versions(id)
     Audit.where('id > ?', id).order("version DESC").all
   end
-  
-  #　只查找单个页面要回滚的记录
-  def self.find_rollback_pages(id, auditable_id)
-    Audit.where('id > ? and auditable_id = ?', id, auditable_id).order("version DESC").all
-  end
+
   
   # --- 给其他类扩展的方法
   module UserMethods
