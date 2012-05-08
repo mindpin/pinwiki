@@ -50,33 +50,30 @@ class WikiController < ApplicationController
   
   # 单条记录的版本回滚
   def page_rollback
-=begin
-    audit = Audit.find_by_version(params[:id])
-    wiki_page = WikiPage.find(audit.auditable_id)
-    
-    case audit.action
-    when 'create', 'update'
-      # page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
-      wiki_page.title = audit.wiki_page_version.title
-      wiki_page.content = audit.wiki_page_version.content
-      wiki_page.creator_id = audit.wiki_page_version.creator_id
-      wiki_page.save
+    audits = Audit.find_rollback_pages(params[:audit_id], params[:auditable_id])
+    audits.each do |audit|
+      self._rollback_audit(audit)
     end
-    #p audit.audited_changes
-    #p page
-    #p 'ffffffffffffffffffffffffffffffff'
     
-    redirect_to "/wiki/#{audit.auditable_id}"
-=end
+    redirect_to "/wiki/#{params[:auditable_id]}"
+
   end
   
   
   # 所有记录的版本回滚
   def rollback
-    audits = Audit.find_rollback_versions(params[:id])
+    audits = Audit.find_rollback_versions(params[:audit_id])
     audits.each do |audit|
+      self._rollback_audit(audit)
+    end
+    
+    redirect_to "/wiki"
+  end
+  
+  
 
-      case audit.action
+  def _rollback_audit(audit)
+    case audit.action
       when 'create'
         wiki_page = WikiPage.find(audit.auditable_id)
         wiki_page.destroy unless wiki_page.nil?
@@ -101,10 +98,7 @@ class WikiController < ApplicationController
         
         wiki_page.save
 
-      end
     end
-    
-    redirect_to "/wiki"
   end
   
 end

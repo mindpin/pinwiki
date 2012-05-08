@@ -7,10 +7,11 @@ Quora::Application.routes.draw do
     
     member do
       get :versions
-      get :page_rollback
-      get :rollback
     end
   end
+  
+  get 'wiki/rollback/:audit_id' => 'wiki#rollback'
+  get 'wiki/:auditable_id/rollback/:audit_id' => 'wiki#page_rollback'
   
   resources :wiki
 

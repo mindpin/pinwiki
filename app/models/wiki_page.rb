@@ -1,6 +1,6 @@
 class WikiPage < ActiveRecord::Base
   # --- 模型关联
-  has_many :audits, :class_name => 'Audit', :foreign_key => :auditable_id
+  # has_many :audits, :class_name => 'Audit', :foreign_key => :auditable_id
   has_many :versions, :class_name => 'WikiPageVersion', :foreign_key => :wiki_page_id
   belongs_to :creator, :class_name => 'User', :foreign_key => :creator_id
   audited :associated_with => :creator
