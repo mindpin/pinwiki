@@ -7,6 +7,7 @@ class WikiPageVersion < ActiveRecord::Base
     WikiPageVersion.where('wiki_page_id = ? and audit_id < ?', self.wiki_page_id, self.audit_id).order('id DESC').first
   end
   
+
   # --- 给其他类扩展的方法
   
 end

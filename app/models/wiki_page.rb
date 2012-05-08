@@ -23,6 +23,28 @@ class WikiPage < ActiveRecord::Base
   end
   
   
+  def rollback(audit)
+    case audit.action
+      when 'create'
+        self.destroy
+
+      when 'update'
+        self.title = audit.wiki_page_version.prev.title
+        self.content = audit.wiki_page_version.prev.content
+        self.creator_id = audit.wiki_page_version.prev.creator_id
+        self.save
+     
+      when 'destroy'
+        WikiPage.new(
+          :id => audit.wiki_page_version.wiki_page_id,
+          :title => audit.wiki_page_version.title,
+          :content => audit.wiki_page_version.content,
+          :creator_id => audit.wiki_page_version.creator_id
+        )
+    end
+  end
+
+
   def self.system_rollback(audit)
     case audit.action
       when 'create'
@@ -52,29 +74,7 @@ class WikiPage < ActiveRecord::Base
     end
   end
   
-  
-  def rollback(audit)
-    case audit.action
-      when 'create'
-        self.destroy unless self.nil?
 
-      when 'update'
-        self.title = audit.wiki_page_version.prev.title
-        self.content = audit.wiki_page_version.prev.content
-        self.creator_id = audit.wiki_page_version.prev.creator_id
-        self.save
-     
-      when 'destroy'
-        self.id = audit.wiki_page_version.wiki_page_id
-        self.title = audit.wiki_page_version.title
-        self.content = audit.wiki_page_version.content
-        self.creator_id = audit.wiki_page_version.creator_id
-        
-        self.save
-
-    end
-  end
-  
   
   # --- 给其他类扩展的方法
   module UserMethods
