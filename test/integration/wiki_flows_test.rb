@@ -48,6 +48,7 @@ class WikiFlowsTest < ActionDispatch::IntegrationTest
     wiki_page = WikiPage.find(1)
     wiki_page.destroy
     
+    ActiveRecord::Base.connection.execute("update audits set user_id = 1")
     
     # assert_redirected_to "/wiki/#{assigns(:wiki_page)}"
     # assert_response :success

@@ -2,7 +2,8 @@ require 'test_helper'
 
 class WikiControllerTest < ActionController::TestCase
   fixtures :users
-  
+
+=begin
   test "should post create" do
     assert_difference('WikiPage.count') do
       post(:create, :wiki_page => {:title => 'test12222', :content => 'content12222'})
@@ -10,6 +11,7 @@ class WikiControllerTest < ActionController::TestCase
     # assert_redirected_to "/wiki/#{assigns(:wiki_page)}"
     # assert_response :success
   end
-  
+=end
+
 
 end

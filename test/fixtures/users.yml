@@ -3,6 +3,7 @@
 linux:
  id: 1
  name: linux
- hashed_password: 6a1edd6241c0e2d4ee0b529148583de64a3e7c53
- salt: -6355787080.0752521323463562
+ hashed_password: 7fd828e2096ad75fd53badac0b428d6f3fb9d910
+ salt: -6338199780.750604566904812
  email: kingla_pei@163.com
+ last_login_time: 2012-05-09 09:15:52
