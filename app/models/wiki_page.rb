@@ -24,7 +24,8 @@ class WikiPage < ActiveRecord::Base
     audits.each do |audit|
       case audit.action
         when 'create'
-          self.destroy
+          wiki_page = WikiPage.find(self.id)
+          wiki_page.destroy
   
         when 'update'
           self.title = audit.wiki_page_version.prev.title
@@ -33,12 +34,13 @@ class WikiPage < ActiveRecord::Base
           self.save
        
         when 'destroy'
-          WikiPage.new(
+          wiki_page = WikiPage.new(
             :id => audit.wiki_page_version.wiki_page_id,
             :title => audit.wiki_page_version.title,
             :content => audit.wiki_page_version.content,
             :creator_id => audit.wiki_page_version.creator_id
           )
+          wiki_page.save
       end
     end
     
