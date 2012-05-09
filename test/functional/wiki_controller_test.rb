@@ -10,9 +10,5 @@ class WikiControllerTest < ActionController::TestCase
     # assert_response :success
   end
   
-  test "should put update" do
-    put(:update)
-  end
-  
 
 end

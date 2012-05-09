@@ -9,8 +9,8 @@ class WikiController < ApplicationController
   end
   
   def create
-    # wiki_page = current_user.wiki_pages.build(params[:wiki_page])
-    wiki_page = WikiPage.new(params[:wiki_page])
+    wiki_page = current_user.wiki_pages.build(params[:wiki_page])
+    # wiki_page = WikiPage.new(params[:wiki_page])
     wiki_page.save
 
     redirect_to '/wiki'
