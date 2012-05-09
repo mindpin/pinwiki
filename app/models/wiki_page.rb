@@ -10,72 +10,80 @@ class WikiPage < ActiveRecord::Base
   
   def create_new_version
     WikiPageVersion.create(
+      :creator_id => self.creator_id,
       :wiki_page_id => self.id,
       :audit_id => Audit.last.id,
       :title => self.title, 
       :content => self.content
     )
   end
-  
-  #　只查找单个页面要回滚的记录
-  def find_rollback(id)
-    Audit.where('id > ? and auditable_id = ?', id, self.id).order("version DESC").all
-  end
-  
-  
-  def rollback(audit)
-    case audit.action
-      when 'create'
-        self.destroy
 
-      when 'update'
-        self.title = audit.wiki_page_version.prev.title
-        self.content = audit.wiki_page_version.prev.content
-        self.creator_id = audit.wiki_page_version.prev.creator_id
-        self.save
-     
-      when 'destroy'
-        WikiPage.new(
-          :id => audit.wiki_page_version.wiki_page_id,
-          :title => audit.wiki_page_version.title,
-          :content => audit.wiki_page_version.content,
-          :creator_id => audit.wiki_page_version.creator_id
-        )
+
+  def rollback(audit)
+    audits = Audit.where('id > ? and auditable_id = ?', audit.id, self.id).order("id DESC").all
+    audits.each do |audit|
+      case audit.action
+        when 'create'
+          self.destroy
+  
+        when 'update'
+          self.title = audit.wiki_page_version.prev.title
+          self.content = audit.wiki_page_version.prev.content
+          self.creator_id = audit.wiki_page_version.prev.creator_id
+          self.save
+       
+        when 'destroy'
+          WikiPage.new(
+            :id => audit.wiki_page_version.wiki_page_id,
+            :title => audit.wiki_page_version.title,
+            :content => audit.wiki_page_version.content,
+            :creator_id => audit.wiki_page_version.creator_id
+          )
+      end
     end
+    
   end
 
 
   def self.system_rollback(audit)
-    case audit.action
-      when 'create'
-        wiki_page = WikiPage.find(audit.auditable_id)
-        wiki_page.destroy unless wiki_page.nil?
-
-      when 'update'
-        # page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
-
-        wiki_page = WikiPage.find(audit.auditable_id)
-
-        wiki_page.title = audit.wiki_page_version.prev.title
-        wiki_page.content = audit.wiki_page_version.prev.content
-        wiki_page.creator_id = audit.wiki_page_version.prev.creator_id
-        wiki_page.save
-     
-      when 'destroy'
-        wiki_page = WikiPage.new
-
-        wiki_page.id = audit.wiki_page_version.wiki_page_id
-        wiki_page.title = audit.wiki_page_version.title
-        wiki_page.content = audit.wiki_page_version.content
-        wiki_page.creator_id = audit.wiki_page_version.creator_id
-        
-        wiki_page.save
-
+    audits = Audit.where('id > ?', audit.id).order("id DESC").all
+    
+    audits.each do |audit|
+      case audit.action
+        when 'create'
+          wiki_page = WikiPage.find(audit.auditable_id)
+          wiki_page.destroy unless wiki_page.nil?
+  
+        when 'update'
+          # page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
+  
+          wiki_page = WikiPage.find(audit.auditable_id)
+  
+          wiki_page.title = audit.wiki_page_version.prev.title
+          wiki_page.content = audit.wiki_page_version.prev.content
+          wiki_page.creator_id = audit.wiki_page_version.prev.creator_id
+          wiki_page.created_at = audit.wiki_page_version.prev.created_at
+          wiki_page.updated_at = audit.wiki_page_version.prev.updated_at
+          wiki_page.save
+       
+        when 'destroy'
+          wiki_page = WikiPage.new
+  
+          wiki_page.id = audit.wiki_page_version.wiki_page_id
+          wiki_page.title = audit.wiki_page_version.title
+          wiki_page.content = audit.wiki_page_version.content
+          wiki_page.creator_id = audit.wiki_page_version.creator_id
+          wiki_page.created_at = audit.wiki_page_version.created_at
+          wiki_page.updated_at = audit.wiki_page_version.updated_at
+          
+          wiki_page.save
+      end
+      
     end
+    
   end
   
 
-  
   # --- 给其他类扩展的方法
   module UserMethods
     def self.included(base)
