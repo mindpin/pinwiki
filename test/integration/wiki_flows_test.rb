@@ -3,9 +3,13 @@ require 'test_helper'
 class WikiFlowsTest < ActionDispatch::IntegrationTest
   
   
-  # fixtures :users
+  fixtures :users
 
   test "login and browse site" do
+    ActiveRecord::Base.connection.execute("TRUNCATE TABLE wiki_pages")
+    ActiveRecord::Base.connection.execute("TRUNCATE TABLE wiki_page_versions")
+    ActiveRecord::Base.connection.execute("TRUNCATE TABLE audits")
+    
     get "/"
     assert_response :success
  
@@ -14,11 +18,37 @@ class WikiFlowsTest < ActionDispatch::IntegrationTest
  
     assert_difference('WikiPage.count') do
       wiki_page = WikiPage.new
-      wiki_page.title = 'test1'
-      wiki_page.content = 'content1'
       wiki_page.creator_id = 1
-      assert wiki_page.save
+      wiki_page.title = 'title1'
+      wiki_page.content = 'content1'
+      wiki_page.save
     end
+    
+    assert_difference('WikiPage.count') do
+      wiki_page = WikiPage.new
+      wiki_page.creator_id = 1
+      wiki_page.title = 'title2'
+      wiki_page.content = 'content2'
+      wiki_page.save
+    end
+    
+    
+    wiki_page = WikiPage.find(1)
+    wiki_page.creator_id = 1
+    wiki_page.title = 'title11'
+    wiki_page.content = 'content11'
+    wiki_page.save
+    
+    wiki_page = WikiPage.find(2)
+    wiki_page.creator_id = 1
+    wiki_page.title = 'title22'
+    wiki_page.content = 'content22'
+    wiki_page.save
+    
+    wiki_page = WikiPage.find(1)
+    wiki_page.destroy
+    
+    
     # assert_redirected_to "/wiki/#{assigns(:wiki_page)}"
     # assert_response :success
   end
