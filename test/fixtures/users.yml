@@ -1,7 +1,8 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  name: MyString
-
-two:
-  name: MyString
+ id: 1
+ name: linux
+ hashed_password: 6a1edd6241c0e2d4ee0b529148583de64a3e7c53
+ salt: -6355787080.0752521323463562
+ email: kingla_pei@163.com
