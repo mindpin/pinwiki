@@ -12,7 +12,7 @@ class WikiPage < ActiveRecord::Base
     WikiPageVersion.create(
       :creator_id => self.creator_id,
       :wiki_page_id => self.id,
-      :audit_id => Audit.last.id,
+      :audit_id => self.audits.last.id,
       :title => self.title, 
       :content => self.content
     )
