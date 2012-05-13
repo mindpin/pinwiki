@@ -21,6 +21,7 @@ class WikiPage < ActiveRecord::Base
 
   def rollback(audit)
     audits = Audit.where('id > ? and auditable_id = ?', audit.id, self.id).order("id DESC").all
+
     audits.each do |audit|
       case audit.action
         when 'create'
@@ -28,17 +29,32 @@ class WikiPage < ActiveRecord::Base
           wiki_page.destroy
   
         when 'update'
+=begin
           self.title = audit.wiki_page_version.prev.title
           self.content = audit.wiki_page_version.prev.content
           self.creator_id = audit.wiki_page_version.prev.creator_id
+=end
+          data = audit.page_version
+          self.title = data['title']
+          self.content = data['content']
+          self.creator_id = audit.user_id
           self.save
        
         when 'destroy'
+=begin
           wiki_page = WikiPage.new(
             :id => audit.wiki_page_version.wiki_page_id,
             :title => audit.wiki_page_version.title,
             :content => audit.wiki_page_version.content,
             :creator_id => audit.wiki_page_version.creator_id
+          )
+=end
+          data = audit.page_version
+          wiki_page = WikiPage.new(
+            :id => audit.auditable_id,
+            :title => data['title'],
+            :content => data['content'],
+            :creator_id => audit.user_id
           )
           wiki_page.save
       end
@@ -60,23 +76,23 @@ class WikiPage < ActiveRecord::Base
           # page = audit.audited_changes.each_line.map {|l| l.split(':').last.strip}
   
           wiki_page = WikiPage.find(audit.auditable_id)
+
+          data = audit.page_version
   
-          wiki_page.title = audit.wiki_page_version.prev.title
-          wiki_page.content = audit.wiki_page_version.prev.content
-          wiki_page.creator_id = audit.wiki_page_version.prev.creator_id
-          wiki_page.created_at = audit.wiki_page_version.prev.created_at
-          wiki_page.updated_at = audit.wiki_page_version.prev.updated_at
+          wiki_page.title = data['title']
+          wiki_page.content = data['content']
+          wiki_page.creator_id = audit.user_id
           wiki_page.save
        
         when 'destroy'
           wiki_page = WikiPage.new
+
+          data = audit.page_version
   
-          wiki_page.id = audit.wiki_page_version.wiki_page_id
-          wiki_page.title = audit.wiki_page_version.title
-          wiki_page.content = audit.wiki_page_version.content
-          wiki_page.creator_id = audit.wiki_page_version.creator_id
-          wiki_page.created_at = audit.wiki_page_version.created_at
-          wiki_page.updated_at = audit.wiki_page_version.updated_at
+          wiki_page.id = audit.auditable_id
+          wiki_page.title = data['title']
+          wiki_page.content = data['content']
+          wiki_page.creator_id = audit.user_id
           
           wiki_page.save
       end
